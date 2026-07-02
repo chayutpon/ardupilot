@@ -16,9 +16,11 @@
   simulator connector for ardupilot version of last_letter
 */
 
-#include "SIM_last_letter.h"
+#include "SIM_config.h"
 
-#if HAL_SIM_LAST_LETTER_ENABLED
+#if AP_SIM_LAST_LETTER_ENABLED
+
+#include "SIM_last_letter.h"
 
 #include <fcntl.h>
 #include <stdio.h>
@@ -131,6 +133,7 @@ void last_letter::update(const struct sitl_input &input)
 {
     send_servos(input);
     recv_fdm(input);
+    update_battery();
     sync_frame_time();
 
     update_position();
@@ -141,4 +144,4 @@ void last_letter::update(const struct sitl_input &input)
 
 } // namespace SITL
 
-#endif  // HAL_SIM_LAST_LETTER_ENABLED
+#endif  // AP_SIM_LAST_LETTER_ENABLED

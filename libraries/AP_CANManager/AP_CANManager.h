@@ -26,10 +26,6 @@
 #include <AP_Param/AP_Param.h>
 #include "AP_SLCANIface.h"
 #include "AP_CANDriver.h"
-#include <GCS_MAVLink/GCS_config.h>
-#if HAL_GCS_ENABLED
-#include "AP_MAVLinkCAN.h"
-#endif
 
 #include "AP_CAN.h"
 
@@ -87,11 +83,6 @@ public:
     {
         return LogLevel(_loglevel.get());
     }
-    
-    // Method to log status and debug information for review while debugging
-    void log_text(AP_CANManager::LogLevel loglevel, const char *tag, const char *fmt, ...) FMT_PRINTF(4,5);
-
-    void log_retrieve(ExpandingString &str) const;
 
     // return driver type index i
     AP_CAN::Protocol get_driver_type(uint8_t i) const
@@ -103,23 +94,6 @@ public:
     }
 
     static const struct AP_Param::GroupInfo var_info[];
-
-#if HAL_GCS_ENABLED
-    inline bool handle_can_forward(mavlink_channel_t chan, const mavlink_command_int_t &packet, const mavlink_message_t &msg)
-    {
-        return mavlink_can.handle_can_forward(chan, packet, msg);
-    }
-
-    inline void handle_can_frame(const mavlink_message_t &msg)
-    {
-        mavlink_can.handle_can_frame(msg);
-    }
-
-    inline void handle_can_filter_modify(const mavlink_message_t &msg)
-    {
-        mavlink_can.handle_can_filter_modify(msg);
-    }
-#endif
 
 private:
 
@@ -187,15 +161,7 @@ private:
 
     static AP_CANManager *_singleton;
 
-    char* _log_buf;
-    uint32_t _log_pos;
-
     HAL_Semaphore _sem;
-
-#if HAL_GCS_ENABLED
-    // Class for handling MAVLink CAN frames
-    AP_MAVLinkCAN mavlink_can;
-#endif // HAL_GCS_ENABLED
 
 #if AP_CAN_LOGGING_ENABLED && HAL_LOGGING_ENABLED
     /*

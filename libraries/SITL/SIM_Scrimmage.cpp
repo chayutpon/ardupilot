@@ -16,9 +16,11 @@
   simulator connector for Scrimmage simulator
 */
 
-#include "SIM_Scrimmage.h"
+#include "SIM_config.h"
 
-#if HAL_SIM_SCRIMMAGE_ENABLED
+#if AP_SIM_SCRIMMAGE_ENABLED
+
+#include "SIM_Scrimmage.h"
 
 #include <stdio.h>
 #include <inttypes.h>
@@ -115,6 +117,7 @@ void Scrimmage::recv_fdm(const struct sitl_input &input)
 
     battery_voltage = 0;
     battery_current = 0;
+    battery_temperature_degC = 0;
     rpm[0] = 0;
     rpm[1] = 0;
 
@@ -134,4 +137,4 @@ void Scrimmage::update(const struct sitl_input &input)
 
 } // namespace SITL
 
-#endif
+#endif  // AP_SIM_SCRIMMAGE_ENABLED
